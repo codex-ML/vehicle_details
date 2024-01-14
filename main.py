@@ -2,12 +2,7 @@ import os
 import telebot
 import requests
 
-# Get the bot token from the environment variable
-bot_token = os.environ.get("TELEGRAM_BOT_TOKEN")
-
-if not bot_token:
-    raise ValueError("Please set the TELEGRAM_BOT_TOKEN environment variable.")
-
+bot_token = os.environ.get('BOT_TOKEN')
 bot = telebot.TeleBot(bot_token)
 
 @bot.message_handler(commands=['start', 'help'])
