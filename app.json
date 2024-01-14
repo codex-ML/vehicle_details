@@ -1,0 +1,24 @@
+{
+  "name": "vehicle_details",
+  "description": "Telegram Bot deployed on Heroku",
+  "repository": "https://github.com/NOOB-EXOTIC21/vcbot",
+  "env": {
+    "BOT_TOKEN": {
+      "description": "Telegram bot token",
+      "required": false
+    }
+  },
+  "scripts": {
+    "start": "python main.py"
+  },
+"buildpacks": [
+  {
+    "url": "heroku/python",
+    "stack": "heroku-20",
+    "config": {
+      "python_version": "3.8.12"
+    }
+  }
+]
+
+}
