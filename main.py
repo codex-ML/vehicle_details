@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 
 # Replace 'YOUR_API_TOKEN' with your Bot's API token from BotFather
-API_TOKEN = 'YOUR_API_TOKEN'
+API_TOKEN = '6417942588:AAGW_OC6fa8vAmAJ5jExWzRJnKIOVdloJQI'
 
 # Create a new bot instance
 bot = telebot.TeleBot(API_TOKEN)
