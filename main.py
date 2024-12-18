@@ -1,60 +1,30 @@
-import os
 import telebot
-import requests
-import json
-from config import BOT_TOKEN
+from telebot import types
 
-bot = telebot.TeleBot(BOT_TOKEN)
+# Replace 'YOUR_API_TOKEN' with your Bot's API token from BotFather
+API_TOKEN = 'YOUR_API_TOKEN'
 
-@bot.message_handler(commands=['start', 'help'])
+# Create a new bot instance
+bot = telebot.TeleBot(API_TOKEN)
+
+# Handle /start command
+@bot.message_handler(commands=['start'])
 def send_welcome(message):
-    try:
-        bot.reply_to(message, "Howdy, how are you doing?  \n Commands :- /vc <vehicle_id>")
-    except Exception as e:
-        handle_error(message, e)
+    # Instructions message
+    instructions = (
+        "Welcome to the bot! Here's how you can use it:\n\n"
+        "1. Click the button below to open the web app.\n"
+        "2. Enjoy browsing the content.\n\n"
+        "Feel free to contact us if you need help!"
+    )
+    
+    # Create an inline button that opens the web app URL
+    markup = types.InlineKeyboardMarkup()
+    button = types.InlineKeyboardButton("Open Web App", url="http://lodemon.ct.ws/?i=1")
+    markup.add(button)
+    
+    # Send the message with the button
+    bot.send_message(message.chat.id, instructions, reply_markup=markup)
 
-@bot.message_handler(commands=['vc'])
-def tell_vehicle_info(message):
-    try:
-        # Extract the vehicleId from the command
-        vehicle_id = message.text.split(' ')[1]
-
-        # Make the API request
-        response = requests.get(f"https://lol.game-quasar.com/?vehicle_id={vehicle_id}")
-
-        # Check if the request was successful (status code 200)
-        if response.status_code == 200:
-            # Parse the JSON response
-            data = response.json()
-
-            # Extract specific fields from the header
-            title_car = data.get("data", {}).get("header", {}).get("title", "Unknown")
-            ownership = data.get("data", {}).get("header", {}).get("ownership", "N/A")
-            owner_name = data.get("data", {}).get("header", {}).get("ownerName", "N/A")
-            vehicle_num = data.get("data", {}).get("header", {}).get("vehicleNum", "N/A")
-
-            # Extract tabs data
-            tabs = data.get("data", {}).get("tabs", [])
-
-            # Create a formatted message with the extracted information
-            formatted_message = f"Title: {title_car}\nOwnership: {ownership}\nOwner Name: {owner_name}\nVehicle Number: {vehicle_num}"
-
-            # Append information from tabs
-            for tab in tabs:
-                formatted_message += f"\n{tab.get('title', 'Unknown')}: {tab.get('id', 'Unknown')}"
-
-            # Reply to the user with the formatted information
-            bot.reply_to(message, f"Vehicle Information for {vehicle_id}:\n{formatted_message}")
-        else:
-            bot.reply_to(message, f"Error: Unable to fetch information for vehicle {vehicle_id}")
-    except IndexError:
-        bot.reply_to(message, "Error: Please provide a vehicleId after /vc")
-    except Exception as e:
-        handle_error(message, e)
-
-def handle_error(message, error):
-    # Log the error or take appropriate action
-    print(f"Error: {error}")
-    bot.reply_to(message, "An error occurred. Please try again later.")
-
-bot.infinity_polling()
+# Run the bot
+bot.polling()
